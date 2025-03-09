@@ -17,7 +17,23 @@ class ProcessingMining:
         return cls.__statistic
 
 
+    @classmethod
+    def get_statistic_for_date(cls, date: str) -> list | bool:
+        """
+        Возвращает статистику о выработке ресурсов за полученную дату, если такая имеется
+        :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
+        :return: dict
+        """
+        result_lst = []
 
+        if len(cls.__statistic) == 0:
+            return False
+
+        for elem in cls.__statistic:
+            if elem.date == date:
+                result_lst.append(elem)
+
+        return result_lst
 
 
 
