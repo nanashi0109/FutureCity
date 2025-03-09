@@ -56,31 +56,48 @@ class ProcessingMining:
 
 
 
+    @classmethod
+    def get_statistic_resource(cls, resource: Resource) -> float | bool:
+        """
+        Возвращает количество ресурса по строго заданным характеристикам хранящийся на складе
+        :param resource: принимает объект ресурса со всеми его характеристиками
+        :return: float | bool
+        """
+        result = 0
+
+        if len(cls.__statistic) == 0:
+            return False
+
+        for elem in cls.__statistic:
+            if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade:
+                result += elem.weight
+
+        return result
 
 
 
     @classmethod
-    def add_resource(cls, data: Resource) -> None:
+    def add_resource(cls, resource: Resource) -> None:
         """
         Добавляет Полученные ресурсы на склад на склад, суммирует количество добытых ресурсов если идентичные есть на складе,
         Также добавляет данные о ежедневной добыче ресурсов в отдел статистики
-        :param data: принимает сведения о добытых ресурсах за указанную дату
+        :param resource: принимает сведения о добытых ресурсах за указанную дату
         :return: None
         """
-        cls.__statistic.append(data)
+        cls.__statistic.append(resource)
 
-        del data['date']
+        del resource['date']
 
         if len(cls.__warehouse) != 0:
 
             for elem in cls.__warehouse:
-                if elem.name != data.name or elem.category != data.category or elem.color != data.color or elem.grade != data.grade:
-                    cls.__warehouse.append(data)
+                if elem.name != resource.name or elem.category != resource.category or elem.color != resource.color or elem.grade != resource.grade:
+                    cls.__warehouse.append(resource)
 
                 else:
-                    elem.weight += data.weight
+                    elem.weight += resource.weight
         else:
-            cls.__warehouse.append(data)
+            cls.__warehouse.append(resource)
 
 
     @classmethod
