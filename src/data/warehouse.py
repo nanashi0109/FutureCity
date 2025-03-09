@@ -22,7 +22,7 @@ class ProcessingMining:
         """
         Возвращает статистику о выработке ресурсов за полученную дату, если такая имеется
         :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
-        :return: dict
+        :return: list | bool
         """
         result_lst = []
 
@@ -35,6 +35,24 @@ class ProcessingMining:
 
         return result_lst
 
+
+    @classmethod
+    def get_statistic_for_category(cls, category: str) -> float | bool:
+        """
+        Возвращает общее количество ресурса полученной категории хранится на складе, с любыми характеристиками
+        :param category: принимает название категории (ore, stone, wood....)
+        :return: float
+        """
+        result = 0
+
+        if len(cls.__statistic) == 0:
+            return False
+
+        for elem in cls.__statistic:
+            if elem.category == category:
+                result += elem.weight
+
+        return result
 
 
 
