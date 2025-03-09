@@ -1,3 +1,4 @@
+from src.model import resource
 from src.model.resource import Resource
 
 class ProcessingMining:
@@ -5,6 +6,24 @@ class ProcessingMining:
     __warehouse = []
 
     __statistic = []
+
+
+    @classmethod
+    def get_all_statistic(cls) -> list:
+        """
+        Возвращает всю статистику о выработке ресурсов, содержащуюся в базе
+        :return: list
+        """
+        return cls.__statistic
+
+
+
+
+
+
+
+
+
 
     @classmethod
     def add_resource(cls, data: Resource) -> None:
@@ -48,6 +67,6 @@ class ProcessingMining:
             if elem.name != name or elem.category != category or color != color or elem.grade != grade:
                 return False
 
-            elem.weight += weight
+            elem.weight = weight
             return True
 
