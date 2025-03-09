@@ -2,10 +2,10 @@ from pydantic import BaseModel
 
 
 class Wood(BaseModel):
-
-    weight: float  # Вес древесины на м3
+    name: str # Название древесины
+    date: str # Дата выработки
+    weight: float  # Вес древесины на м3 в килограммах, выработка за день
     color: str  # Цвет древесины
-    bark: bool  # Наличие коры
     density: float  # Плотность древесины
     humidity: int  # Влажность - содержание влаги в дереве
     thermal: float  # Теплопроводность
