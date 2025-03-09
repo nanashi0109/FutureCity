@@ -6,6 +6,4 @@ class Wood(BaseModel):
     date: str # Дата выработки
     weight: float  # Вес древесины на м3 в килограммах, выработка за день
     color: str  # Цвет древесины
-    density: float  # Плотность древесины
-    humidity: int  # Влажность - содержание влаги в дереве
-    thermal: float  # Теплопроводность
+    brand: str  # Марка древесины
