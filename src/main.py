@@ -1,4 +1,4 @@
-from fastapi import FastApi, APIRouter
+from fastapi import FastApi
 from .web import transport_handler, route_handler, citizen_handler
 
 
