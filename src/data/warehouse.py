@@ -131,7 +131,11 @@ class ProcessingMining:
             return False
 
         for elem in cls.__statistic:
-            if elem.name == resource.name and elem.color == resource.color and elem.grade == resource.grade and elem.date == resource.date:
+            if (elem.name == resource.name and
+                elem.color == resource.color and
+                elem.grade == resource.grade and
+                elem.date == resource.date):
+
                 elem.citizen = resource.citizen
                 return True
 
@@ -149,7 +153,12 @@ class ProcessingMining:
             return False
 
         for elem in cls.__statistic:
-            if elem.name == resource.name and elem.color == resource.color and elem.grade == resource.grade and elem.date == resource.date and elem.citizen == resource.citizen:
+            if (elem.name == resource.name and
+                elem.color == resource.color and
+                elem.grade == resource.grade and
+                elem.date == resource.date and
+                elem.citizen == resource.citizen):
+
                 del elem
                 return True
 
@@ -157,7 +166,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def del_data_warehouse(cls, name: str, color: str, grade: str) -> bool:
+    def del_data_in_warehouse(cls, name: str, color: str, grade: str) -> bool:
         """
          Удаляет запись о наличии определенного ресурса со склада
         :param name: название ресурса

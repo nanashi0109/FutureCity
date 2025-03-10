@@ -125,3 +125,57 @@ def update_statistic(resource: Resource = Body(embed=True)) -> dict:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
     return {'status': 'ok'}
+
+
+@router.patch('/del-statistic')
+def del_data_statistic(resource: Resource = Body(embed=True)) -> dict:
+    """
+    Удаляет из отдела статистики записи о добыче ресурсов, идентичные полученным
+    :param resource: принимает сведения о добытых ресурсах за указанную дату
+    :return: bool
+    """
+    result = pm.del_data_statistic(resource)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return {'status': 'ok'}
+
+
+@router.patch('/del-data')
+def del_data_in_warehouse(name: str = Body(embed=True), color: str = Body(embed=True), grade: str = Body(embed=True)) -> dict:
+    """
+     Удаляет запись о наличии определенного ресурса со склада
+    :param name: название ресурса
+    :param color: цвет ресурса
+    :param grade: марка ресурса
+    :return: bool
+    """
+    result = pm.del_data_in_warehouse(name, color, grade)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return {'status': 'ok'}
+
+
+@router.patch('/clear-warehouse')
+def clear_warehouse() -> dict:
+    """
+    Удаляет все записи со склада
+    :return: None
+    """
+    pm.clear_warehouse()
+
+    return {'status': 'ok'}
+
+
+@router.patch('/clear-warehouse')
+def clear_statistic() -> dict:
+    """
+    Удаляет все записи из отдела статистики
+    :return: None
+    """
+    pm.clear_statistic()
+
+    return {'status': 'ok'}
