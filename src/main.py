@@ -1,8 +1,11 @@
-from fastapi import FastApi
+from fastapi import FastApi, APIRouter
+from .web import transport_handler, route_handler
+
 
 app = FastApi()
 
-#TODO: include routers
+app.include_router(transport_handler.router)
+app.include_router(route_handler.router)
 
 
 if __name__ == "__main__":
