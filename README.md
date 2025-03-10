@@ -13,5 +13,5 @@
 by suchok94
 
 ```Python
-pip install fastapi uvicron
+pip install fastapi uvicorn
 ```
