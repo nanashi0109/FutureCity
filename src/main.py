@@ -3,6 +3,7 @@ from fastapi import FastApi, APIRouter, Body
 app = FastApi()
 
 
+@app.get()
 
 
 if __name__ == "__main__":

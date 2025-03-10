@@ -1,4 +1,4 @@
-from src.model import resource
+
 from src.model.resource import Resource
 
 class ProcessingMining:
@@ -33,30 +33,32 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_statistic_for_category(cls, category: str) -> float | bool:
+    def get_weight_for_category(cls, category: str) -> float | bool:
         """
-        Возвращает общее количество ресурса полученной категории хранится на складе, с любыми характеристиками
+        Возвращает общее количество ресурса полученной категории которое хранится на складе, с любыми характеристиками, если он имеется
         :param category: принимает название категории (ore, stone, wood....)
-        :return: float
+        :return: float | bool
         """
-        if len(cls.__statistic) == 0:
+        if len(cls.__warehouse) == 0:
             return False
 
-        return sum(elem.weight for elem in cls.__statistic if elem.category == category)
+        return sum(elem.weight for elem in cls.__warehouse if elem.category == category)
 
 
 
     @classmethod
-    def get_statistic_resource(cls, resource: Resource) -> float | bool:
+    def get_weight_for_params(cls, name: str, color: str, grade: str) -> float | bool:
         """
-        Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе
-        :param resource: принимает объект ресурса со всеми его характеристиками
+        Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе, если он имеется
+        :param name: название ресурса
+        :param color: цвет ресурса
+        :param grade: марка ресурса
         :return: float | bool
         """
-        if len(cls.__statistic) == 0:
+        if len(cls.__warehouse) == 0:
             return False
 
-        return sum(elem.weight for elem in cls.__statistic if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade)
+        return sum(elem.weight for elem in cls.__warehouse if elem.name == name and elem.color == color and elem.grade == grade)
 
 
     @classmethod
@@ -73,9 +75,9 @@ class ProcessingMining:
 
 
     @classmethod
-    def add_resource(cls, resource: Resource) -> None:
+    def add_resource_in_warehouse(cls, resource: Resource) -> None:
         """
-        Добавляет Полученные ресурсы на склад на склад, суммирует количество добытых ресурсов если идентичные есть на складе,
+        Добавляет Полученные ресурсы на склад и в отдел статистики, суммирует количество добытых ресурсов если идентичные есть на складе,
         Также добавляет данные о ежедневной добыче ресурсов в отдел статистики
         :param resource: принимает сведения о добытых ресурсах за указанную дату
         :return: None
@@ -88,7 +90,7 @@ class ProcessingMining:
         if len(cls.__warehouse) != 0:
 
             for elem in cls.__warehouse:
-                if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade:
+                if elem.name == resource.name and elem.color == resource.color and elem.grade == resource.grade:
                     elem.weight += resource.weight
 
             cls.__warehouse.append(resource)
@@ -98,24 +100,97 @@ class ProcessingMining:
 
 
     @classmethod
-    def update_weight_resource(cls, name: str, category : str, color: str, grade: str,  weight: float) -> bool:
+    def update_weight_resource_in_warehouse(cls, name: str, color: str, grade: str, weight: float) -> bool:
         """
         Изменяет количество ресурса на складе если идентичные есть на складе, например если часть ресурса уже израсходована
-        :param name: принимает название ресурса,
-        :param category: принимает категорию ресурса (дерево, железо, уголь ....)
-        :param color: принимает цвет ресурса,
-        :param grade: принимает марку ресурса (A/B/C)
-        :param weight: принимает новое количество указанного ресурса на складе
+        :param name: название ресурса
+        :param color: цвет ресурса
+        :param grade: марка ресурса
+        :param weight:марка ресурса
         :return: bool
         """
         if len(cls.__warehouse) == 0:
             return False
 
         for elem in cls.__warehouse:
-            if elem.name == name and elem.category == category and color == color and elem.grade == grade:
+            if elem.name == name and elem.color == color and elem.grade == grade:
                 elem.weight = weight
                 return True
 
         return False
+
+
+    @classmethod
+    def update_citizen_in_statistic(cls, resource: Resource) -> bool:
+        """
+        Изменяет горожанина, задействованного на добыче определенного ресурса
+        :param resource: принимает сведения о добытых ресурсах за указанную дату
+        :return: bool
+        """
+        if len(cls.__statistic) == 0:
+            return False
+
+        for elem in cls.__statistic:
+            if elem.name == resource.name and elem.color == resource.color and elem.grade == resource.grade and elem.date == resource.date:
+                elem.citizen = resource.citizen
+                return True
+
+        return False
+
+
+    @classmethod
+    def del_data_statistic(cls, resource: Resource) -> bool:
+        """
+        Удаляет из отдела статистики записи о добыче ресурсов, идентичные полученным
+        :param resource: принимает сведения о добытых ресурсах за указанную дату
+        :return: bool
+        """
+        if len(cls.__statistic) == 0:
+            return False
+
+        for elem in cls.__statistic:
+            if elem.name == resource.name and elem.color == resource.color and elem.grade == resource.grade and elem.date == resource.date and elem.citizen == resource.citizen:
+                del elem
+                return True
+
+        return False
+
+
+    @classmethod
+    def del_data_warehouse(cls, name: str, color: str, grade: str) -> bool:
+        """
+         Удаляет запись о наличии определенного ресурса со склада
+        :param name: название ресурса
+        :param color: цвет ресурса
+        :param grade: марка ресурса
+        :return: bool
+        """
+        if len(cls.__warehouse) == 0:
+            return False
+
+        for elem in cls.__warehouse:
+            if elem.name == name and elem.color == color and elem.grade == grade:
+                del elem
+                return True
+
+        return False
+
+
+    @classmethod
+    def clear_warehouse(cls):
+        """
+        Удаляет все записи со склада
+        :return:
+        """
+        cls.__warehouse = []
+
+
+    @classmethod
+    def clear_statistic(cls):
+        """
+        Удаляет все записи из отдела статистики
+        :return:
+        """
+        cls.__statistic = []
 
 
