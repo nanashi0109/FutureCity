@@ -8,4 +8,4 @@ class Resource(BaseModel):
     weight: float     # Вес ресурса в килограммах, выработка за день
     color: str        # Цвет ресурса
     grade: str        # Марка ресурса
-    citizen: Citizen
+    citizen: Citizen  # Горожанин, занимающийся выработкой ресурса
