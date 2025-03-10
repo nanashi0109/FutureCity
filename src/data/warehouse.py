@@ -24,16 +24,12 @@ class ProcessingMining:
         :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
         :return: list | bool
         """
-        result_lst = []
-
         if len(cls.__statistic) == 0:
             return False
 
-        for elem in cls.__statistic:
-            if elem.date == date:
-                result_lst.append(elem)
+        return [elem for elem in cls.__statistic if elem.date == date]
 
-        return result_lst
+
 
 
     @classmethod
@@ -43,35 +39,37 @@ class ProcessingMining:
         :param category: принимает название категории (ore, stone, wood....)
         :return: float
         """
-        result = 0
-
         if len(cls.__statistic) == 0:
             return False
 
-        for elem in cls.__statistic:
-            if elem.category == category:
-                result += elem.weight
+        return sum(elem.weight for elem in cls.__statistic if elem.category == category)
 
-        return result
 
 
     @classmethod
     def get_statistic_resource(cls, resource: Resource) -> float | bool:
         """
-        Возвращает количество ресурса по строго заданным характеристикам хранящийся на складе
+        Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе
         :param resource: принимает объект ресурса со всеми его характеристиками
         :return: float | bool
         """
-        result = 0
-
         if len(cls.__statistic) == 0:
             return False
 
-        for elem in cls.__statistic:
-            if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade:
-                result += elem.weight
+        return sum(elem.weight for elem in cls.__statistic if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade)
 
-        return result
+
+    @classmethod
+    def get_statistic_for_citizen(cls, name: str) -> list | bool:
+        """
+        Возвращает всю выработку горожанина за весь период, согласно полученному имени
+        :param name: принимает имя горожанина
+        :return: list
+        """
+        if len(cls.__statistic) == 0:
+            return False
+
+        return [elem for elem in cls.__statistic if name == elem.citizen.name]
 
 
     @classmethod
