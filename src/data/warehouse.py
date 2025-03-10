@@ -85,15 +85,16 @@ class ProcessingMining:
         cls.__statistic.append(resource)
 
         del resource['date']
+        del resource['citizen']
 
         if len(cls.__warehouse) != 0:
 
             for elem in cls.__warehouse:
-                if elem.name != resource.name or elem.category != resource.category or elem.color != resource.color or elem.grade != resource.grade:
-                    cls.__warehouse.append(resource)
-
-                else:
+                if elem.name == resource.name and elem.category == resource.category and elem.color == resource.color and elem.grade == resource.grade:
                     elem.weight += resource.weight
+
+            cls.__warehouse.append(resource)
+
         else:
             cls.__warehouse.append(resource)
 
@@ -113,10 +114,10 @@ class ProcessingMining:
             return False
 
         for elem in cls.__warehouse:
-            if elem.name != name or elem.category != category or color != color or elem.grade != grade:
-                return False
+            if elem.name == name and elem.category == category and color == color and elem.grade == grade:
+                elem.weight = weight
+                return True
 
-            elem.weight = weight
-            return True
+        return False
 
 
