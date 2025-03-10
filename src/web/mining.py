@@ -10,7 +10,7 @@ def get_all_statistic() -> list:
     Возвращает всю статистику о выработке ресурсов, содержащуюся в базе
     :return: list
     """
-    result = pm.get_all_statistic()
+    result = pm.return_all_statistic()
 
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
@@ -25,7 +25,22 @@ def get_statistic_for_date(date: str) -> list:
     :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
     :return: list
     """
-    result = pm.get_statistic_for_date(date)
+    result = pm.return_statistic_for_date(date)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return result
+
+
+@router.get('/weight-for-category')
+def get_weight_for_category(category: str) -> float:
+    """
+    Возвращает общее количество ресурса полученной категории которое хранится на складе, с любыми характеристиками, если он имеется
+    :param category: принимает название категории (ore, stone, wood....)
+    :return: float | bool
+    """
+    result = pm.return_weight_for_category(category)
 
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
