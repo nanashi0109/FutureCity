@@ -16,6 +16,10 @@ class Transports:
 
     @classmethod
     def create_transport(cls, transport: Transport) -> None:
+        for transport_i in cls.__transports:
+            if transport_i.id == transport.id:
+                transport.id = len(cls.__transports) + 1
+                break
         cls.__transports.append(transport)
 
     @classmethod

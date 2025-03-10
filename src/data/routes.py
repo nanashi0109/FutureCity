@@ -16,6 +16,10 @@ class Routes:
 
     @classmethod
     def create_route(cls, route: Route) -> None:
+        for route_i in cls.__routes:
+            if route_i.id == route.id:
+                route.id = len(cls.__transports) + 1
+                break
         cls.__routes.append(route)
 
     @classmethod
