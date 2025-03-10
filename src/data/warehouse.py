@@ -9,7 +9,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_all_statistic(cls) -> list:
+    def return_all_statistic(cls) -> list:
         """
         Возвращает всю статистику о выработке ресурсов, содержащуюся в базе
         :return: list
@@ -18,7 +18,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_statistic_for_date(cls, date: str) -> list | bool:
+    def return_statistic_for_date(cls, date: str) -> list | bool:
         """
         Возвращает статистику о выработке ресурсов за полученную дату, если такая имеется
         :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
@@ -33,7 +33,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_weight_for_category(cls, category: str) -> float | bool:
+    def return_weight_for_category(cls, category: str) -> float | bool:
         """
         Возвращает общее количество ресурса полученной категории которое хранится на складе, с любыми характеристиками, если он имеется
         :param category: принимает название категории (ore, stone, wood....)
@@ -47,7 +47,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_weight_for_params(cls, name: str, color: str, grade: str) -> float | bool:
+    def return_weight_for_params(cls, name: str, color: str, grade: str) -> float | bool:
         """
         Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе, если он имеется
         :param name: название ресурса
@@ -62,7 +62,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def get_statistic_for_citizen(cls, name: str) -> list | bool:
+    def return_statistic_for_citizen(cls, name: str) -> list | bool:
         """
         Возвращает всю выработку горожанина за весь период, согласно полученному имени
         :param name: принимает имя горожанина
