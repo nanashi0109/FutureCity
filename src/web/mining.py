@@ -1,11 +1,12 @@
 from fastapi import Body, APIRouter, HTTPException
+from src.model.resource import Resource
 from src.data.warehouse import ProcessingMining as pm
 
 router = APIRouter(prefix='/mining')
 
 
 @router.get('/all-statistic')
-def get_all_statistic() -> list:
+def get_all_statistic() -> dict:
     """
     Возвращает всю статистику о выработке ресурсов, содержащуюся в базе
     :return: list
@@ -15,11 +16,11 @@ def get_all_statistic() -> list:
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
-    return result
+    return {'status': 'ok', 'statistic': result}
 
 
 @router.get('/statistic-for-date')
-def get_statistic_for_date(date: str) -> list:
+def get_statistic_for_date(date: str = Body(embed=True)) -> dict:
     """
     Возвращает статистику о выработке ресурсов за полученную дату, если такая имеется
     :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
@@ -30,11 +31,11 @@ def get_statistic_for_date(date: str) -> list:
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
-    return result
+    return {'status': 'ok', 'statistic': result}
 
 
 @router.get('/weight-for-category')
-def get_weight_for_category(category: str) -> float:
+def get_weight_for_category(category: str = Body(embed=True)) -> dict:
     """
     Возвращает общее количество ресурса полученной категории которое хранится на складе, с любыми характеристиками, если он имеется
     :param category: принимает название категории (ore, stone, wood....)
@@ -45,11 +46,11 @@ def get_weight_for_category(category: str) -> float:
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
-    return result
+    return {'status': 'ok', 'weight': result}
 
 
 @router.get('/weight-for-params')
-def get_weight_for_params(name: str, color: str, grade: str) -> float:
+def get_weight_for_params(name: str = Body(embed=True), color: str = Body(embed=True), grade: str = Body(embed=True)) -> dict:
     """
     Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе, если он имеется
     :param name: название ресурса
@@ -62,4 +63,65 @@ def get_weight_for_params(name: str, color: str, grade: str) -> float:
     if not result:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
-    return result
+    return {'status': 'ok', 'weight': result}
+
+
+@router.get('/statistic-for-citizen')
+def get_statistic_for_citizen(name: str = Body(embed=True)) -> dict:
+    """
+    Возвращает всю выработку горожанина за весь период, согласно полученного имени
+    :param name: принимает имя горожанина
+    :return: list
+    """
+    result = pm.return_statistic_for_citizen(name)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return {'status': 'ok', 'statistic': result}
+
+
+@router.post('/add-resource')
+def add_resource(resource: Resource = Body(embed=True)) -> dict:
+    """
+    Добавляет Полученные ресурсы на склад и в отдел статистики, суммирует количество добытых ресурсов если идентичные есть на складе,
+    Также добавляет данные о ежедневной добыче ресурсов в отдел статистики
+    :param resource: принимает сведения о добытых ресурсах за указанную дату
+    :return: None
+    """
+    pm.add_resource_in_warehouse(resource)
+
+    return {'status': 'ok'}
+
+
+@router.patch('/update-weight')
+def update_weight(name: str = Body(embed=True), color: str = Body(embed=True), grade: str = Body(embed=True), weight: float = Body(embed=True)) -> dict:
+    """
+    Изменяет количество ресурса на складе если идентичные есть на складе, например если часть ресурса уже израсходована
+    :param name: название ресурса
+    :param color: цвет ресурса
+    :param grade: марка ресурса
+    :param weight:марка ресурса
+    :return: bool
+    """
+    result = pm.update_weight_resource_in_warehouse(name, color, grade, weight)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return {'status': 'ok'}
+
+
+@router.patch('/update-statistic')
+def update_statistic(resource: Resource = Body(embed=True)) -> dict:
+    """
+    Изменяет горожанина, задействованного на добыче определенного ресурса
+    :param resource: принимает сведения о добытых ресурсах за указанную дату
+    :return: dict
+    """
+    result = pm.update_citizen_in_statistic(resource)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return {'status': 'ok'}
