@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+from src.model.citizen import Citizen
 
 class Resource(BaseModel):
     name: str         # Название ресурса
@@ -8,3 +8,4 @@ class Resource(BaseModel):
     weight: float     # Вес ресурса в килограммах, выработка за день
     color: str        # Цвет ресурса
     grade: str        # Марка ресурса
+    citizen: Citizen
