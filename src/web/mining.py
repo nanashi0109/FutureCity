@@ -46,3 +46,20 @@ def get_weight_for_category(category: str) -> float:
         raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
 
     return result
+
+
+@router.get('/weight-for-params')
+def get_weight_for_params(name: str, color: str, grade: str) -> float:
+    """
+    Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе, если он имеется
+    :param name: название ресурса
+    :param color: цвет ресурса
+    :param grade: марка ресурса
+    :return: float | bool
+    """
+    result = pm.return_weight_for_params(name, color, grade)
+
+    if not result:
+        raise HTTPException(status_code=404, detail='Данные по запросу отсутствуют')
+
+    return result
