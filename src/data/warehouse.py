@@ -55,7 +55,6 @@ class ProcessingMining:
         return result
 
 
-
     @classmethod
     def get_statistic_resource(cls, resource: Resource) -> float | bool:
         """
@@ -73,7 +72,6 @@ class ProcessingMining:
                 result += elem.weight
 
         return result
-
 
 
     @classmethod
@@ -101,7 +99,7 @@ class ProcessingMining:
 
 
     @classmethod
-    def edit_weight_resource(cls, name: str, category : str, color: str, grade: str,  weight: float) -> bool:
+    def update_weight_resource(cls, name: str, category : str, color: str, grade: str,  weight: float) -> bool:
         """
         Изменяет количество ресурса на складе если идентичные есть на складе, например если часть ресурса уже израсходована
         :param name: принимает название ресурса,
@@ -120,4 +118,5 @@ class ProcessingMining:
 
             elem.weight = weight
             return True
+
 
