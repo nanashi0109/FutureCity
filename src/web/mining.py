@@ -20,7 +20,7 @@ def get_all_statistic() -> dict:
 
 
 @router.get('/statistic-for-date')
-def get_statistic_for_date(date: str = Body(embed=True)) -> dict:
+def get_statistic_for_date(date: str) -> dict:
     """
     Возвращает статистику о выработке ресурсов за полученную дату, если такая имеется
     :param date: принимает дату, по которой осуществляется поиск данных о выработке ресурсов
@@ -35,7 +35,7 @@ def get_statistic_for_date(date: str = Body(embed=True)) -> dict:
 
 
 @router.get('/weight-for-category')
-def get_weight_for_category(category: str = Body(embed=True)) -> dict:
+def get_weight_for_category(category: str) -> dict:
     """
     Возвращает общее количество ресурса полученной категории которое хранится на складе, с любыми характеристиками, если он имеется
     :param category: принимает название категории (ore, stone, wood....)
@@ -50,7 +50,7 @@ def get_weight_for_category(category: str = Body(embed=True)) -> dict:
 
 
 @router.get('/weight-for-params')
-def get_weight_for_params(name: str = Body(embed=True), color: str = Body(embed=True), grade: str = Body(embed=True)) -> dict:
+def get_weight_for_params(name: str, color: str, grade: str) -> dict:
     """
     Возвращает количество ресурса по строго заданным характеристикам хранящегося на складе, если он имеется
     :param name: название ресурса
@@ -67,7 +67,7 @@ def get_weight_for_params(name: str = Body(embed=True), color: str = Body(embed=
 
 
 @router.get('/statistic-for-citizen')
-def get_statistic_for_citizen(name: str = Body(embed=True)) -> dict:
+def get_statistic_for_citizen(name: str ) -> dict:
     """
     Возвращает всю выработку горожанина за весь период, согласно полученного имени
     :param name: принимает имя горожанина
