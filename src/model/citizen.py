@@ -2,7 +2,9 @@ from pydantic import BaseModel
 
 
 class Citizen(BaseModel):
-    name: str             # Имя горожанина
-    age: str              # Возраст горожанина
-    gender: str           # Пол горожанина
-    social_rating: str    # Социальный рейтинг
+    name: str
+    age: str
+    gender: str
+    education: str | None
+    social_rating: str
+

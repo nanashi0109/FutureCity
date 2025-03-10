@@ -1,5 +1,5 @@
 from fastapi import FastApi
-from .web import transport_handler, route_handler, citizen_handler
+from .web import transport_handler, route_handler, citizen_handler, mining
 
 
 app = FastApi()
@@ -7,6 +7,7 @@ app = FastApi()
 app.include_router(transport_handler.router)
 app.include_router(route_handler.router)
 app.include_router(citizen_handler)
+app.include_router(mining.router)
 
 
 if __name__ == "__main__":
