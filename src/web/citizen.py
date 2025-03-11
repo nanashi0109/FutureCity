@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi.exceptions import HTTPException
 from src.model.Citizen import Citizen
-from src.data.CitizenData import CitizenData
+from src.data.citizens import CitizenData
 
 
 router = APIRouter(prefix="/citizen")
