@@ -2,7 +2,7 @@ import pytest
 import asyncio
 
 from src.model.citizen import Citizen
-from src.data.citizens import CitizenData
+from src.data.citizen import CitizenData
 
 
 def get_citizens():
