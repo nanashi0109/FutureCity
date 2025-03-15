@@ -36,12 +36,13 @@ def test_ctitzen_get_all(expected_result, setup):
     for id in range(0, len(result), 1):
         assert result[id].id == expected_result[id].id 
 
-# @pytest.mark.parametrize("value, expected_result", [(Citizen(id=5, name="name1", age=41, gender="male", social_rating="high"), 5), 
-#                                                     (Citizen(id=6, name="name2", age=42, gender="famale", social_rating="low"), 6),
-#                                                     (Citizen(id=7, name="name3", age=43, gender="male", social_rating="medium"), 7)])
-# def test_citizen_add(value, expected_result):
-#     asyncio.run(CitizenData.add(value))
-#     assert asyncio.run(CitizenData.get_one(value.id)).id == expected_result.id
+@pytest.mark.parametrize("value, expected_result", [(Citizen(id=5, name="name1", age=41, gender="male", social_rating="high"), 5), 
+                                                    (Citizen(id=6, name="name2", age=42, gender="famale", social_rating="low"), 6),
+                                                    (Citizen(id=0, name="name2", age=42, gender="famale", social_rating="low"), 0),
+                                                    (Citizen(id=7, name="name3", age=43, gender="male", social_rating="medium"), 7)])
+def test_citizen_add(value, expected_result):
+    asyncio.run(CitizenData.add(value))
+    assert asyncio.run(CitizenData.get_one(value.id)).id == expected_result
 
 
 # @pytest.mark.parametrize(...)
