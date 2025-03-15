@@ -28,15 +28,15 @@ class CitizenData:
 
     @classmethod
     async def remove(cls, id: int) -> Citizen:
-        target_citizen = cls.get_one(id)
+        target_citizen = await cls.get_one(id)
 
         cls.__citizens.remove(target_citizen)
 
     @classmethod
     async def update(cls, citizen: Citizen) -> None:
-        target_citizen = cls.get_one(citizen)
-        cls.remove(target_citizen)
-        cls.add(citizen)
+        target_citizen = await cls.get_one(citizen.id)
+        await cls.remove(target_citizen.id)
+        await cls.add(citizen)
 
     @classmethod
     def get_last_id(cls) -> int:   

@@ -13,6 +13,7 @@ def get_citizens():
     
     return (citizen1, citizen2, citizen3, citizen4)
 
+
 @pytest.fixture()
 def setup(scope="session"):
     citizens = CitizenData
@@ -36,6 +37,7 @@ def test_ctitzen_get_all(expected_result, setup):
     for id in range(0, len(result), 1):
         assert result[id].id == expected_result[id].id 
 
+
 @pytest.mark.parametrize("value, expected_result", [(Citizen(id=5, name="name1", age=41, gender="male", social_rating="high"), 5), 
                                                     (Citizen(id=6, name="name2", age=42, gender="famale", social_rating="low"), 6),
                                                     (Citizen(id=0, name="name2", age=42, gender="famale", social_rating="low"), 0),
@@ -45,7 +47,18 @@ def test_citizen_add(value, expected_result):
     assert asyncio.run(CitizenData.get_one(value.id)).id == expected_result
 
 
-# @pytest.mark.parametrize(...)
-# def test_citizen_remove():
-#     pass
+@pytest.mark.parametrize("value", [0, 1, 2])
+def test_citizen_remove(value, setup):
+    asyncio.run(setup.remove(value))
+    assert asyncio.run(setup.get_one(value)) is None
 
+
+@pytest.mark.parametrize("value", [
+    Citizen(id=0, name="name4", age=21, gender="female", social_rating="high"),
+    Citizen(id=1, name="name7", age=224, gender="female", social_rating="low"),
+    Citizen(id=2, name="name5", age=512, gender="female", social_rating="high")
+    ]) 
+def test_citizen_update(value, setup):
+    asyncio.run(setup.update(value))
+
+    assert asyncio.run(setup.get_one(value.id)) is value
