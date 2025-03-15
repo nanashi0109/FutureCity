@@ -13,21 +13,38 @@ def get_citizens():
     
     return (citizen1, citizen2, citizen3, citizen4)
 
-async def add_citizen_in_data():
-    for citizen in get_citizens():
-        await CitizenData.add(citizen)
-    
+@pytest.fixture()
+def setup(scope="session"):
+    citizens = CitizenData
 
-asyncio.run(add_citizen_in_data())
+    for citizen in get_citizens():
+        asyncio.run(citizens.add(citizen))
+    
+    return citizens
 
 
 @pytest.mark.parametrize("value, expected_result", [(0, "name1"), (1, "name2"), (2, "name3"), (3, "name4")])
-def test_ctitzen_get_one(value, expected_result):
-    assert asyncio.run(CitizenData.get_one(value)).name == expected_result  
+def test_ctitzen_get_one(value, expected_result, setup):
+    assert asyncio.run(setup.get_one(value)).name == expected_result  
 
 
 @pytest.mark.parametrize("expected_result", [get_citizens()])
-def test_ctitzen_get_all(expected_result):
-    result = asyncio.run(CitizenData.get_all())
+def test_ctitzen_get_all(expected_result, setup):
+    global citizens
+
+    result = asyncio.run(setup.get_all())
     for id in range(0, len(result), 1):
         assert result[id].id == expected_result[id].id 
+
+# @pytest.mark.parametrize("value, expected_result", [(Citizen(id=5, name="name1", age=41, gender="male", social_rating="high"), 5), 
+#                                                     (Citizen(id=6, name="name2", age=42, gender="famale", social_rating="low"), 6),
+#                                                     (Citizen(id=7, name="name3", age=43, gender="male", social_rating="medium"), 7)])
+# def test_citizen_add(value, expected_result):
+#     asyncio.run(CitizenData.add(value))
+#     assert asyncio.run(CitizenData.get_one(value.id)).id == expected_result.id
+
+
+# @pytest.mark.parametrize(...)
+# def test_citizen_remove():
+#     pass
+
