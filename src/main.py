@@ -3,6 +3,8 @@ from .web import transport, route, citizen, school
 
 app = FastApi()
 
+
+
 app.include_router(transport.router)
 app.include_router(route.router)
 app.include_router(citizen.router)
