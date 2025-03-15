@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from src.model.citizens import Citizen
+from src.model.citizen import Citizen
 
 class Transport(BaseModel):
     id: int
