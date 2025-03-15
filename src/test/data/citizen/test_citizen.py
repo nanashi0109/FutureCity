@@ -5,16 +5,18 @@ from src.model.citizen import Citizen
 from src.data.citizens import CitizenData
 
 
-async def add_citizen_in_data():
-    citizen1 = Citizen(name="name1", age=41, gender="male", education=None, social_rating="high")
-    citizen2 = Citizen(name="name2", age=42, gender="famale", education=None, social_rating="low")
-    citizen3 = Citizen(name="name3", age=43, gender="male", education=None, social_rating="medium")
-    citizen4 = Citizen(name="name4", age=44, gender="famale", education=None, social_rating="high")
+def get_citizens():
+    citizen1 = Citizen(id=0, name="name1", age=41, gender="male", social_rating="high")
+    citizen2 = Citizen(id=1, name="name2", age=42, gender="famale", social_rating="low")
+    citizen3 = Citizen(id=2, name="name3", age=43, gender="male", social_rating="medium")
+    citizen4 = Citizen(id=3, name="name4", age=44, gender="famale", social_rating="high")
     
-    await CitizenData.add(citizen1)
-    await CitizenData.add(citizen2)
-    await CitizenData.add(citizen3)
-    await CitizenData.add(citizen4)
+    return (citizen1, citizen2, citizen3, citizen4)
+
+async def add_citizen_in_data():
+    for citizen in get_citizens():
+        await CitizenData.add(citizen)
+    
 
 asyncio.run(add_citizen_in_data())
 
@@ -24,6 +26,8 @@ def test_ctitzen_get_one(value, expected_result):
     assert asyncio.run(CitizenData.get_one(value)).name == expected_result  
 
 
-# @pytest.mark.parametrize("expected_result", [...])
-# def test_ctitzen_get_all(expected_result):
-#     assert CitizenData.get_all() == expected_result
+@pytest.mark.parametrize("expected_result", [get_citizens()])
+def test_ctitzen_get_all(expected_result):
+    result = asyncio.run(CitizenData.get_all())
+    for id in range(0, len(result), 1):
+        assert result[id].id == expected_result[id].id 

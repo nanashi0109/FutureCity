@@ -6,6 +6,6 @@ class Citizen(BaseModel):
     name: str
     age: int
     gender: str
-    education: str | None
+    education: str | None = None
     social_rating: str
 
