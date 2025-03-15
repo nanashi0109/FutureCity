@@ -1,4 +1,4 @@
-from src.model.Citizen import Citizen
+from src.model.citizen import Citizen
 
 class CitizenData:
     __citizens = []
