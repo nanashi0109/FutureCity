@@ -18,7 +18,7 @@ class Routes:
     def create_route(cls, route: Route) -> None:
         for route_i in cls.__routes:
             if route_i.id == route.id:
-                route.id = len(cls.__transports) + 1
+                route.id = len(cls.__routes) + 1
                 break
         cls.__routes.append(route)
 
@@ -29,8 +29,9 @@ class Routes:
                 cls.__routes.remove(route)
         
     
-    # @classmethod
-    # async def update(cls, route: Route) -> None:
-    #     for route_i in cls.__routes:
-    #         if route_i.id == route.id:
-    #             cls.__routes(route_i) = route
+    @classmethod
+    def update(cls, route: Route) -> None:
+        target = cls.get_one_route(route.id)
+        cls.delete_route(target.id)
+        cls.create_route(route)
+                
