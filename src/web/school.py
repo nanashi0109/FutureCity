@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body
 from fastapi.exceptions import HTTPException
 from src.model.school import School as SchoolModel
-from src.data.school import School as SchoolData
+from src.data.schools import School as SchoolData
 
 router = APIRouter(prefix='/school')
 
