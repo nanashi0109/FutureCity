@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter
 from fastapi.exceptions import HTTPException
 from src.model.school import School as SchoolModel
 from src.data.schools import School as SchoolData
