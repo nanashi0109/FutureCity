@@ -1,8 +1,8 @@
-from fastapi import FastApi, APIRouter
+from fastapi import FastAPI, APIRouter
 from .web import transport_handler, route_handler
 
 
-app = FastApi()
+app = FastAPI()
 
 app.include_router(transport_handler.router)
 app.include_router(route_handler.router)
