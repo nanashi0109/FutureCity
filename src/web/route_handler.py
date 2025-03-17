@@ -19,7 +19,7 @@ def add_route(route: Route):
     return {"status": "ok"}
 
 @router.delete("/delete-route/{id}")
-def delete_route(id: int = Body(embed=True)):
+def delete_route(id: int):
     Routes.delete_route(id)
 
     return {"status": "ok"}

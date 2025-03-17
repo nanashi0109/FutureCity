@@ -1,4 +1,4 @@
-from model.transport_network.transports import Transport
+from src.model.transport_network.transports import Transport
 
 class Transports:
     __transports = []
@@ -31,7 +31,7 @@ class Transports:
     
     @classmethod
     async def update(cls, transport: Transport) -> None:
-        for transport_i in cls.__transports:
-            if transport_i.id == transport.id:
-                cls.__transports(transport_i) = transport
+        target = cls.get_one_transport(transport.id)
+        cls.delete_transport(target.id)
+        cls.create_transport(transport)
         
