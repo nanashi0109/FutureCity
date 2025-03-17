@@ -42,3 +42,5 @@ class Schools:
                 school.name = school_to_update.name
                 school.students = school_to_update.students
                 school.teachers = school_to_update.teachers
+                return True
+        return False
