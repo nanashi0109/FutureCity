@@ -81,7 +81,7 @@ def test_schools_delete(value, expected_result, setup):
     assert result == expected_result
 
 @pytest.mark.parametrize(
-    "school_to_update, expected_result",
+    'value, expected_result',
     [
         (School(id=1, name="Лицей №1", students=[], teachers=[]), True),
         (School(id=2, name="Гимназия №2", students=[], teachers=[]), True),
