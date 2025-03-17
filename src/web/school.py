@@ -3,22 +3,24 @@ from fastapi.exceptions import HTTPException
 from src.model.school import School as SchoolModel
 from src.data.schools import School as SchoolData
 
+import asyncio
+
 router = APIRouter(prefix='/school')
 
-@router.get('/')
+@router.get('/all')
 def get_schools():
-    schools = SchoolData.get_all()
+    schools = asyncio.run(SchoolData.get_all())
 
     return {'status': 'ok', 'schools': schools}
 
 @router.get('/{id}')
-def get_one_school(id: int = Body(embed=True)):
+def get_one_school(id: int):
     try:
         id = int(id)
     except ValueError:
         return HTTPException(400, 'Некорректный id.')
     
-    school = SchoolData.get_one(id)
+    school = asyncio.run(SchoolData.get_one(id))
 
     if school is None:
         return HTTPException(404, 'Школа не найдена.')
@@ -32,18 +34,18 @@ def add_school(school: SchoolModel):
     return {'status': 'ok'}
 
 @router.post('/delete/{id}')
-def delete_school(id: int = Body(embed=True)):
+def delete_school(id: int):
     try:
         id = int(id)
     except ValueError:
         return HTTPException(400, 'Некорректный id.')
     
-    SchoolData.remove(id)
+    asyncio.run(SchoolData.remove(id))
 
     return {'status': 'ok'}
 
 @router.patch('/school/{id}')
 def update_school(school: SchoolModel):
-    SchoolData.update(school)
+    asyncio.run(SchoolData.update(school))
 
     return {'status': 'ok'}
