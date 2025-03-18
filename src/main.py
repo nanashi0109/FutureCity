@@ -1,3 +1,5 @@
+from fastapi import FastApi, APIRouter
+from .web import transport_handler, route_handler, citizen_handler, school
 from fastapi import FastApi
 from .web import transport_handler, route_handler, citizen_handler, mining
 
@@ -7,6 +9,7 @@ app = FastApi()
 app.include_router(transport_handler.router)
 app.include_router(route_handler.router)
 app.include_router(citizen_handler)
+app.include_router(school.router)
 app.include_router(mining.router)
 
 
