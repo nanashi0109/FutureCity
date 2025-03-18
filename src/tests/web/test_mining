@@ -1,0 +1,183 @@
+import pytest
+from fastapi.testclient import TestClient
+from src.web.mining import router
+from src.model.resource import Resource
+from src.model.citizen import Citizen
+from src.data.warehouse import ProcessingMining as pm
+
+client = TestClient(router)
+
+@pytest.fixture(scope='module', autouse=True)
+def setup_stat():
+    pm.clear_warehouse()
+    pm.clear_statistic()
+    params = [{'name': 'still', 'category' : 'iron', 'date': '15.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'D', 'citizen' :Citizen(name = 'Egor', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'still', 'category' : 'iron', 'date': '15.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'D', 'citizen' :Citizen(name = 'Egor', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'gold', 'category' : 'iron', 'date': '15.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'D', 'citizen' :Citizen(name = 'Bob', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'dub', 'category' : 'wood', 'date': '18.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'A', 'citizen' :Citizen(name = 'Bob', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'dub', 'category' : 'wood', 'date': '18.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'A', 'citizen' :Citizen(name = 'Bob', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'topol', 'category' : 'wood', 'date': '18.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'A', 'citizen' :Citizen(name = 'Max', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'topol', 'category' : 'wood', 'date': '18.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'A', 'citizen' :Citizen(name = 'Max', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'coal', 'category' : 'coal', 'date': '18.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'B', 'citizen' :Citizen(name = 'Max', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'coal', 'category' : 'coal', 'date': '25.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'B', 'citizen' :Citizen(name = 'Max', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'coal', 'category' : 'coal', 'date': '25.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'B', 'citizen' :Citizen(name = 'Crul', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'coal', 'category' : 'coal', 'date': '25.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'C', 'citizen' :Citizen(name = 'Crul', age = 45, gender = 'male', education = None, social_rating = 8)},
+                {'name': 'gold', 'category' : 'iron', 'date': '25.05.2025', 'weight': 25.5, 'color': 'gray', 'grade':  'C', 'citizen' :Citizen(name = 'Crul', age = 45, gender = 'male', education = None, social_rating = 8)}]
+                
+    for elem in params:
+        resource = Resource(**elem)
+        pm.add_resource_in_warehouse(resource)
+
+def test_get_all_statistic():
+    response = client.get('/mining/all-statistic')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert len(response.json()['statistic']) == 12
+
+def test_get_statistic_for_date():
+    response = client.get('/mining/statistic-for-date?date=15.05.2025')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert len(response.json()['statistic']) == 3
+
+    response = client.get('/mining/statistic-for-date?date=01.01.2025')
+    assert response.status_code == 404
+
+def test_get_weight_for_category():
+    response = client.get('/mining/weight-for-category?category=iron')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert response.json()['weight'] == 76.5
+
+    response = client.get('/mining/weight-for-category?category=coal')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert response.json()['weight'] == 102.0
+
+    response = client.get('/mining/weight-for-category?category=nonexistent')
+    assert response.status_code == 404
+
+def test_get_weight_for_params():
+    response = client.get('/mining/weight-for-params?name=still&color=gray&grade=D')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert response.json()['weight'] == 51.0
+
+    response = client.get('/mining/weight-for-params?name=gold&color=gray&grade=C')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert response.json()['weight'] == 25.5
+
+    response = client.get('/mining/weight-for-params?name=nonexistent&color=gray&grade=C')
+    assert response.status_code == 404
+
+def test_get_statistic_for_citizen():
+    response = client.get('/mining/statistic-for-citizen?name=Egor')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+    assert len(response.json()['statistic']) == 2
+
+    response = client.get('/mining/statistic-for-citizen?name=nonexistent')
+    assert response.status_code == 404
+
+def test_add_resource():
+    new_resource = {
+        'name': 'silver',
+        'category': 'metal',
+        'date': '01.01.2025',
+        'weight': 10.0,
+        'color': 'silver',
+        'grade': 'A',
+        'citizen': {
+            'name': 'John',
+            'age': 30,
+            'gender': 'male',
+            'education': None,
+            'social_rating': 5
+        }
+    }
+    response = client.post('/mining/add-resource', json={'resource': new_resource})
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.get('/mining/all-statistic')
+    assert len(response.json()['statistic']) == 13
+
+def test_update_weight():
+    response = client.patch('/mining/update-weight', json={'name': 'still', 'color': 'gray', 'grade': 'D', 'weight': 100.0})
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.patch('/mining/update-weight', json={'name': 'nonexistent', 'color': 'gray', 'grade': 'C', 'weight': 100.0})
+    assert response.status_code == 404
+
+def test_update_statistic():
+    new_resource = {
+        'name': 'still',
+        'category': 'iron',
+        'date': '15.05.2025',
+        'weight': 25.5,
+        'color': 'gray',
+        'grade': 'D',
+        'citizen': {
+            'name': 'John',
+            'age': 30,
+            'gender': 'male',
+            'education': None,
+            'social_rating': 5
+        }
+    }
+    response = client.patch('/mining/update-statistic', json={'resource': new_resource})
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    new_resource['name'] = 'nonexistent'
+    response = client.patch('/mining/update-statistic', json={'resource': new_resource})
+    assert response.status_code == 404
+
+def test_del_data_statistic():
+    resource_to_delete = {
+        'name': 'still',
+        'category': 'iron',
+        'date': '15.05.2025',
+        'weight': 25.5,
+        'color': 'gray',
+        'grade': 'D',
+        'citizen': {
+            'name': 'Egor',
+            'age': 45,
+            'gender': 'male',
+            'education': None,
+            'social_rating': 8
+        }
+    }
+    response = client.patch('/mining/del-statistic', json={'resource': resource_to_delete})
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.patch('/mining/del-statistic', json={'resource': resource_to_delete})
+    assert response.status_code == 404
+
+def test_del_data_in_warehouse():
+    response = client.patch('/mining/del-data', json={'name': 'still', 'color': 'gray', 'grade': 'D'})
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.patch('/mining/del-data', json={'name': 'nonexistent', 'color': 'gray', 'grade': 'C'})
+    assert response.status_code == 404
+
+def test_clear_warehouse():
+    response = client.patch('/mining/clear-warehouse')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.get('/mining/weight-for-category?category=iron')
+    assert response.status_code == 404
+
+def test_clear_statistic():
+    response = client.patch('/mining/clear-statistic')
+    assert response.status_code == 200
+    assert response.json()['status'] == 'ok'
+
+    response = client.get('/mining/all-statistic')
+    assert response.status_code == 404
