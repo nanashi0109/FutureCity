@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from Citizen import Citizen
+from src.model.Citizen import Citizen
 
 class School(BaseModel):
     id: int

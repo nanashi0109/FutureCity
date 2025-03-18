@@ -4,17 +4,17 @@ class Schools:
     __schools = []
     
     @classmethod
-    def get_one(cls, id: int) -> School | None:
+    async def get_one(cls, id: int) -> School | None:
         for school in cls.__schools:
             if school.id == id:
                 return school
 
     @classmethod
-    def get_all(cls) -> list[School]:
+    async def get_all(cls) -> list[School]:
         return cls.__schools
 
     @classmethod
-    def create(cls, school_to_add: School) -> bool:
+    async def create(cls, school_to_add: School) -> bool:
         insert_id = 1
         for school in cls.__schools:
             if school.id == insert_id:
@@ -28,7 +28,7 @@ class Schools:
         return True
 
     @classmethod
-    def delete(cls, id: int) -> bool:
+    async def delete(cls, id: int) -> bool:
         for school in cls.__schools:
             if school.id == id:
                 cls.__schools.remove(school)
@@ -36,9 +36,11 @@ class Schools:
         return False
 
     @classmethod
-    def update(cls, school_to_update: School) -> bool:
+    async def update(cls, school_to_update: School) -> bool:
         for school in cls.__schools:
             if school.id == school_to_update.id:
                 school.name = school_to_update.name
                 school.students = school_to_update.students
                 school.teachers = school_to_update.teachers
+                return True
+        return False
