@@ -19,7 +19,7 @@ def add_transport(transport: Transport):
     return {"status": "ok"}
 
 @router.delete("/delete-transport/{id}")
-def delete_transport(id: int = Body(embed=True)):
+def delete_transport(id: int):
     Transports.delete_transport(id)
 
     return {"status": "ok"}

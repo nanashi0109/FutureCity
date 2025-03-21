@@ -5,5 +5,5 @@ class Transport(BaseModel):
     name: str
     type: str
     status: str | None = None
-    driver: Citizen | None = None
+    # driver: Citizen | None = None
     
