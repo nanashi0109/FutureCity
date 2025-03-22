@@ -1,12 +1,12 @@
 from fastapi import FastAPI, APIRouter
-from .web import transport_handler, route_handler
+from .web import transport, route, citizen, school
 
 
 app = FastAPI()
 
-app.include_router(transport_handler.router)
-app.include_router(route_handler.router)
-app.include_router(citizen_handler)
+app.include_router(transport.router)
+app.include_router(route.router)
+app.include_router(citizen.router)
 app.include_router(school.router)
 
 if __name__ == "__main__":
